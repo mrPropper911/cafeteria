@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="cafiteria_back:war">
+    <output-path>$PROJECT_DIR$/cafiteria_back/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>cafiteria_back</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="cafiteria_back-0.0.1-SNAPSHOT.war">
+      <element id="artifact" artifact-name="cafiteria_back:war exploded" />
+    </root>
+  </artifact>
+</component>
