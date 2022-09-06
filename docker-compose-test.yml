@@ -9,7 +9,7 @@ services:
     # Configuration for building the docker image for the backend service
     build:
       context: cafiteria_back # Use an image built from the specified dockerfile in the `polling-app-server` directory.
-      dockerfile: Dockerfile
+      dockerfile: cafiteria_back/Dockerfile
     ports:
       - "8080:8080" # Forward the exposed port 8080 on the container to port 8080 on the host machine
     restart: always
@@ -27,7 +27,7 @@ services:
   app-client:
     build:
       context: cafiteria_front # Use an image built from the specified dockerfile in the `polling-app-client` directory.
-      dockerfile: Dockerfile
+      dockerfile: cafiteria_back/Dockerfile
       args:
         REACT_APP_API_BASE_URL: http://127.0.0.1:8080/api
     ports:

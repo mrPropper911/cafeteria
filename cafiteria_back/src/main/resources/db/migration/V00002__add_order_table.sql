@@ -8,5 +8,6 @@ CREATE TABLE orders
     time     DATETIME     NOT NULL,
     location VARCHAR(255) NOT NULL,
     comment  VARCHAR(255),
+    user_id BIGINT REFERENCES users(id),
     PRIMARY KEY (id)
 );
