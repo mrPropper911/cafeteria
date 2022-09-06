@@ -31,7 +31,7 @@ public class User {
     private String location;
 
     @Column(name = "phone")
-    private int phone;
+    private long phone;
 
     @Column(name = "email")
     private String email;
@@ -39,8 +39,7 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @OneToMany(targetEntity = Order.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "id")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Order> listOrders;
 
     public void addOrder(Order order){
@@ -72,7 +71,7 @@ public class User {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (surname != null ? surname.hashCode() : 0);
         result = 31 * result + (location != null ? location.hashCode() : 0);
-        result = 31 * result + phone;
+        result = (int) (31 * result + phone);
         result = 31 * result + email.hashCode();
         result = 31 * result + password.hashCode();
         return result;

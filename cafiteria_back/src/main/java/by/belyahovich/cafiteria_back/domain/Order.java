@@ -15,6 +15,8 @@ import java.util.Objects;
 @Table(name = "orders")
 public class Order {
 
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
@@ -27,6 +29,10 @@ public class Order {
 
     @Column(name = "comment")
     private String comment;
+
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Override
     public boolean equals(Object o) {
