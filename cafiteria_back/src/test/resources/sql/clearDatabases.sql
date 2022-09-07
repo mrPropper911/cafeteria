@@ -1,2 +1,4 @@
 DELETE FROM orders;
+DELETE FROM roles;
 DELETE FROM users;
+

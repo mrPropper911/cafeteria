@@ -15,8 +15,6 @@ import java.util.Objects;
 @Table(name = "orders")
 public class Order {
 
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
@@ -30,9 +28,16 @@ public class Order {
     @Column(name = "comment")
     private String comment;
 
-    @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity = User.class, cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public Order(long id, Date time, String location, String comment) {
+        this.id = id;
+        this.time = time;
+        this.location = location;
+        this.comment = comment;
+    }
 
     @Override
     public boolean equals(Object o) {

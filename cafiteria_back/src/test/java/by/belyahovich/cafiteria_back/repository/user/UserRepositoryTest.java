@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @ActiveProfiles("test")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class UserRepositoryIT {
+class UserRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
@@ -31,24 +31,24 @@ class UserRepositoryIT {
 
     @Sql(scripts = {"/sql/clearDatabases.sql", "/sql/addUsers.sql"})
     @Test
-    public void shouldPropperlyFindAllUsers() {
+    public void findAll_WithThreeCount_shouldPropperlyFindAllUsers() {
         //when
         int COUNT_OF_USERS_ON_DB = 3;
-        Iterable<User> findUsers = userRepository.findAll();
+        Iterable<User> fondUsers = userRepository.findAll();
 
         //then
-        assertThat(findUsers).hasSize(COUNT_OF_USERS_ON_DB);
+        assertThat(fondUsers).hasSize(COUNT_OF_USERS_ON_DB);
     }
 
     @Sql(scripts = {"/sql/clearDatabases.sql"})
     @Test
-    public void shouldPropperlySaveNewUser() {
+    public void save_WithNewUser_shouldPropperlySaveNewUser() {
         //given
         User user = new User();
         user.setName("Vilat");
         user.setSurname("Volochai");
         user.setLocation("Kiev");
-        user.setPhone(375442386);
+        user.setPhone(375334423863L);
         user.setEmail("vilat@gmail.com");
         user.setPassword("qwer4312");
         user.setListOrders(Collections.emptyList());
@@ -66,7 +66,7 @@ class UserRepositoryIT {
 
     @Sql(scripts = {"/sql/clearDatabases.sql", "/sql/addUsers.sql"})
     @Test
-    public void shouldPropperlyDeleteUserById(){
+    public void delete_WithExistingUser_shouldPropperlyDeleteUser() {
         //given
         long SOME_RANDOM_USER_NUMBER = 1;
         int COUNT_OF_USERS_ON_DB_AFTER_DELETE = 2;
@@ -87,7 +87,7 @@ class UserRepositoryIT {
 
     @Sql(scripts = {"/sql/clearDatabases.sql", "/sql/addUsers.sql"})
     @Test
-    public void shouldProperlyUpdateUserById(){
+    public void update_WithNewUserInformation_shouldProperlyUpdateUser() {
         //given
         long SOME_RANDOM_USER_NUMBER = 2;
         Optional<User> userForUpdate = userRepository.findById(SOME_RANDOM_USER_NUMBER);
@@ -108,18 +108,34 @@ class UserRepositoryIT {
 
     @Sql(scripts = {"/sql/clearDatabases.sql", "/sql/addOrdersForUser.sql"})
     @Test
-    public void shouldPropperlyGetAllOrderByUserId(){
+    public void getAllOrdersByUserId_WithExistingUser_shouldPropperlyGetAllOrderByUserId() {
         //given
-        int COUNT_OF_ORDER_BY_FIRST_USER = 3;
+        int COUNT_OF_ORDER_BY_FIRST_USER = 2;
         Iterable<User> allUser = userRepository.findAll();
         long USER_ID_FOR_SEARCH = allUser.iterator().next().getId();
 
         //when
         List<Order> findedOrderByuserId = userRepositoryJpa.getAllOrdersByUserId(USER_ID_FOR_SEARCH);
 
+        //then
         assertAll(
                 () -> assertThat(findedOrderByuserId).isNotNull().isNotEmpty(),
                 () -> assertThat(findedOrderByuserId).hasSize(COUNT_OF_ORDER_BY_FIRST_USER)
         );
+    }
+
+    @Sql(scripts = {"/sql/clearDatabases.sql", "/sql/addOrdersForUser.sql"})
+    @Test
+    public void findUserByPhone_WithExistingPhone_souldPropperlyFindUserByPhone(){
+        //given
+        long USER_ID_FOR_SEARCH = 1;
+        Optional<User> expectedUser = userRepository.findById(USER_ID_FOR_SEARCH);
+        assertThat(expectedUser).isPresent();
+
+        //when
+        User actualUser = userRepositoryJpa.findUserByPhone(expectedUser.get().getPhone());
+
+        //then
+        assertThat(actualUser).isEqualTo(expectedUser.get());
     }
 }
