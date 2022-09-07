@@ -30,10 +30,10 @@ class OrderRepositoryTest {
 
     @Sql(scripts = {"/sql/clearDatabases.sql", "/sql/addOrdersForUser.sql"})
     @Test
-    public void shouldPropperlyFindAllOrders(){
+    public void shouldPropperlyFindAllOrders() {
         //given
         int COUT_OF_ALL_ORDERS = 3;
-        
+
         //when
         Iterable<Order> foundUsers = orderRepository.findAll();
 
@@ -46,7 +46,7 @@ class OrderRepositoryTest {
 
     @Sql(scripts = {"/sql/clearDatabases.sql", "/sql/addUsers.sql"})
     @Test
-    public void shouldPropperlyAddNewOrder(){
+    public void shouldPropperlyAddNewOrder() {
         //given
         long USER_NUMBER = 1;
         Order order = new Order();
@@ -69,7 +69,7 @@ class OrderRepositoryTest {
 
     @Sql(scripts = {"/sql/clearDatabases.sql", "/sql/addOrdersForUser.sql"})
     @Test
-    public void shouldPropperlyDeleteOrderByUserId(){
+    public void shouldPropperlyDeleteOrderByUserId() {
         //given
         long SOME_NUMBER_OF_ORDER_TO_DELETE = 2;
         int EXPECTED_COUNT_OF_ORDER_AFTER_DELETE = 2;
@@ -90,7 +90,7 @@ class OrderRepositoryTest {
 
     @Sql(scripts = {"/sql/clearDatabases.sql", "/sql/addOrdersForUser.sql"})
     @Test
-    public void shouldPropperlyUpdateOrderById(){
+    public void shouldPropperlyUpdateOrderById() {
         //given
         long SOME_ORDER_NUMBER_FOR_UPDATE = 1;
         Optional<Order> orderForUpdate = orderRepository.findById(SOME_ORDER_NUMBER_FOR_UPDATE);

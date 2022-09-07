@@ -48,7 +48,7 @@ class UserRepositoryTest {
         user.setName("Vilat");
         user.setSurname("Volochai");
         user.setLocation("Kiev");
-        user.setPhone(375442386);
+        user.setPhone(375334423863L);
         user.setEmail("vilat@gmail.com");
         user.setPassword("qwer4312");
         user.setListOrders(Collections.emptyList());
@@ -122,5 +122,20 @@ class UserRepositoryTest {
                 () -> assertThat(findedOrderByuserId).isNotNull().isNotEmpty(),
                 () -> assertThat(findedOrderByuserId).hasSize(COUNT_OF_ORDER_BY_FIRST_USER)
         );
+    }
+
+    @Sql(scripts = {"/sql/clearDatabases.sql", "/sql/addOrdersForUser.sql"})
+    @Test
+    public void souldPropperlyFindUserByPhone(){
+        //given
+        long USER_ID_FOR_SEARCH = 1;
+        Optional<User> expectedUser = userRepository.findById(USER_ID_FOR_SEARCH);
+        assertThat(expectedUser).isPresent();
+
+        //when
+        User actualUser = userRepositoryJpa.findUserByPhone(expectedUser.get().getPhone());
+
+        //then
+        assertThat(actualUser).isEqualTo(expectedUser.get());
     }
 }
