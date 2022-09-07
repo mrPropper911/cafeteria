@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @ActiveProfiles("test")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class UserRepositoryIT {
+class UserRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
@@ -34,10 +34,10 @@ class UserRepositoryIT {
     public void shouldPropperlyFindAllUsers() {
         //when
         int COUNT_OF_USERS_ON_DB = 3;
-        Iterable<User> findUsers = userRepository.findAll();
+        Iterable<User> fondUsers = userRepository.findAll();
 
         //then
-        assertThat(findUsers).hasSize(COUNT_OF_USERS_ON_DB);
+        assertThat(fondUsers).hasSize(COUNT_OF_USERS_ON_DB);
     }
 
     @Sql(scripts = {"/sql/clearDatabases.sql"})
@@ -66,7 +66,7 @@ class UserRepositoryIT {
 
     @Sql(scripts = {"/sql/clearDatabases.sql", "/sql/addUsers.sql"})
     @Test
-    public void shouldPropperlyDeleteUserById(){
+    public void shouldPropperlyDeleteUserById() {
         //given
         long SOME_RANDOM_USER_NUMBER = 1;
         int COUNT_OF_USERS_ON_DB_AFTER_DELETE = 2;
@@ -87,7 +87,7 @@ class UserRepositoryIT {
 
     @Sql(scripts = {"/sql/clearDatabases.sql", "/sql/addUsers.sql"})
     @Test
-    public void shouldProperlyUpdateUserById(){
+    public void shouldProperlyUpdateUserById() {
         //given
         long SOME_RANDOM_USER_NUMBER = 2;
         Optional<User> userForUpdate = userRepository.findById(SOME_RANDOM_USER_NUMBER);
@@ -108,15 +108,16 @@ class UserRepositoryIT {
 
     @Sql(scripts = {"/sql/clearDatabases.sql", "/sql/addOrdersForUser.sql"})
     @Test
-    public void shouldPropperlyGetAllOrderByUserId(){
+    public void shouldPropperlyGetAllOrderByUserId() {
         //given
-        int COUNT_OF_ORDER_BY_FIRST_USER = 3;
+        int COUNT_OF_ORDER_BY_FIRST_USER = 2;
         Iterable<User> allUser = userRepository.findAll();
         long USER_ID_FOR_SEARCH = allUser.iterator().next().getId();
 
         //when
         List<Order> findedOrderByuserId = userRepositoryJpa.getAllOrdersByUserId(USER_ID_FOR_SEARCH);
 
+        //then
         assertAll(
                 () -> assertThat(findedOrderByuserId).isNotNull().isNotEmpty(),
                 () -> assertThat(findedOrderByuserId).hasSize(COUNT_OF_ORDER_BY_FIRST_USER)
