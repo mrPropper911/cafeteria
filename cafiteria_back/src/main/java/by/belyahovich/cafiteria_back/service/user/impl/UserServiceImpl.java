@@ -1,21 +1,28 @@
 package by.belyahovich.cafiteria_back.service.user.impl;
 
 import by.belyahovich.cafiteria_back.domain.Order;
+import by.belyahovich.cafiteria_back.domain.Role;
 import by.belyahovich.cafiteria_back.domain.User;
 import by.belyahovich.cafiteria_back.repository.user.UserRepository;
 import by.belyahovich.cafiteria_back.repository.user.UserRepositoryJpa;
 import by.belyahovich.cafiteria_back.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
     private final UserRepositoryJpa userRepositoryJpa;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, UserRepositoryJpa userRepositoryJpa) {
@@ -24,9 +31,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUserById(long userId) {
+    public Optional<User> findUserById(long userId) {
         Optional<User> userFromDB = userRepository.findById(userId);
-        return userFromDB.orElse(new User());
+        if (userFromDB.isEmpty()){
+            throw new UsernameNotFoundException("User not found" + userId);
+        }
+        return userFromDB;
     }
 
     @Override
@@ -35,24 +45,44 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean saveUser(User user) {
+    public User createUser(User user) {
         User userFromDB = userRepositoryJpa.findUserByPhone(user.getPhone());
 
         if (userFromDB != null){
-            return false;
+            throw new RuntimeException("Record alredy exists");
         }
 
-        userRepository.save(user);
-        return true;
+        user.setRoles(Collections.singleton(new Role(1L, "ROLE_USER")));
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
     }
 
     @Override
     public boolean deleteUser(User user) {
+        if(userRepository.findById(user.getId()).isPresent()){
+            userRepository.delete(user);
+            return true;
+        }
         return false;
     }
 
     @Override
     public List<Order> getAllOrdersByUser(User user) {
-        return null;
+        Optional<User> userFromDB = userRepository.findById(user.getId());
+        if (userFromDB.isEmpty()){
+            throw new UsernameNotFoundException("User not found");
+        }
+        return userRepositoryJpa.getAllOrdersByUserId(user.getId());
     }
+
+    @Override
+    public UserDetails loadUserByUsername(String phone) throws UsernameNotFoundException {
+        User user = userRepositoryJpa.findUserByPhone(Long.parseLong(phone));
+
+        if (user == null){
+            throw new UsernameNotFoundException("User not found");
+        }
+        return user;
+    }
+
 }

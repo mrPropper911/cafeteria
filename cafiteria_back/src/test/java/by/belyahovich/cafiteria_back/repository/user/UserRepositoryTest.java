@@ -31,7 +31,7 @@ class UserRepositoryTest {
 
     @Sql(scripts = {"/sql/clearDatabases.sql", "/sql/addUsers.sql"})
     @Test
-    public void shouldPropperlyFindAllUsers() {
+    public void findAll_WithThreeCount_shouldPropperlyFindAllUsers() {
         //when
         int COUNT_OF_USERS_ON_DB = 3;
         Iterable<User> fondUsers = userRepository.findAll();
@@ -42,7 +42,7 @@ class UserRepositoryTest {
 
     @Sql(scripts = {"/sql/clearDatabases.sql"})
     @Test
-    public void shouldPropperlySaveNewUser() {
+    public void save_WithNewUser_shouldPropperlySaveNewUser() {
         //given
         User user = new User();
         user.setName("Vilat");
@@ -66,7 +66,7 @@ class UserRepositoryTest {
 
     @Sql(scripts = {"/sql/clearDatabases.sql", "/sql/addUsers.sql"})
     @Test
-    public void shouldPropperlyDeleteUserById() {
+    public void delete_WithExistingUser_shouldPropperlyDeleteUser() {
         //given
         long SOME_RANDOM_USER_NUMBER = 1;
         int COUNT_OF_USERS_ON_DB_AFTER_DELETE = 2;
@@ -87,7 +87,7 @@ class UserRepositoryTest {
 
     @Sql(scripts = {"/sql/clearDatabases.sql", "/sql/addUsers.sql"})
     @Test
-    public void shouldProperlyUpdateUserById() {
+    public void update_WithNewUserInformation_shouldProperlyUpdateUser() {
         //given
         long SOME_RANDOM_USER_NUMBER = 2;
         Optional<User> userForUpdate = userRepository.findById(SOME_RANDOM_USER_NUMBER);
@@ -108,7 +108,7 @@ class UserRepositoryTest {
 
     @Sql(scripts = {"/sql/clearDatabases.sql", "/sql/addOrdersForUser.sql"})
     @Test
-    public void shouldPropperlyGetAllOrderByUserId() {
+    public void getAllOrdersByUserId_WithExistingUser_shouldPropperlyGetAllOrderByUserId() {
         //given
         int COUNT_OF_ORDER_BY_FIRST_USER = 2;
         Iterable<User> allUser = userRepository.findAll();
@@ -126,7 +126,7 @@ class UserRepositoryTest {
 
     @Sql(scripts = {"/sql/clearDatabases.sql", "/sql/addOrdersForUser.sql"})
     @Test
-    public void souldPropperlyFindUserByPhone(){
+    public void findUserByPhone_WithExistingPhone_souldPropperlyFindUserByPhone(){
         //given
         long USER_ID_FOR_SEARCH = 1;
         Optional<User> expectedUser = userRepository.findById(USER_ID_FOR_SEARCH);

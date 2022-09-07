@@ -4,12 +4,14 @@ import by.belyahovich.cafiteria_back.domain.Order;
 import by.belyahovich.cafiteria_back.domain.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
 
-    User findUserById (long userId);
+    Optional<User> findUserById (long userId);
     List<User> allUsers();
-    boolean saveUser(User user);
+    User createUser(User user);
     boolean deleteUser(User user);
     List<Order> getAllOrdersByUser(User user);
+
 }
