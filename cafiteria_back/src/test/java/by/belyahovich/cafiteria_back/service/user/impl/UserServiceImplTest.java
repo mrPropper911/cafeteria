@@ -1,5 +1,6 @@
 package by.belyahovich.cafiteria_back.service.user.impl;
 
+import by.belyahovich.cafiteria_back.config.ResourceNotFoundException;
 import by.belyahovich.cafiteria_back.domain.Order;
 import by.belyahovich.cafiteria_back.domain.User;
 import by.belyahovich.cafiteria_back.repository.user.UserRepository;
@@ -9,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.*;
@@ -64,7 +64,7 @@ class UserServiceImplTest {
     public void findUserById_WithNonExsistingUser_shouldThrowUsernameNotFoundException() {
         when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(UsernameNotFoundException.class,
+        assertThrows(ResourceNotFoundException.class,
                 () -> userService.findUserById(user.getId()));
     }
 
@@ -95,7 +95,7 @@ class UserServiceImplTest {
     public void createUser_IfUserExist_shouldNotCreatedUser() {
         when(userRepositoryJpa.findUserByPhone(anyLong())).thenReturn(user);
 
-        assertThrows(RuntimeException.class,
+        assertThrows(ResourceNotFoundException.class,
                 () -> userService.createUser(user));
     }
 
@@ -159,7 +159,7 @@ class UserServiceImplTest {
     @Test
     public void getAllOrdersByUser_IfUserNotExist_shouldPropperlyGetUsernameNotFoundException(){
         when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
-        assertThrows(UsernameNotFoundException.class,
+        assertThrows(ResourceNotFoundException.class,
                 () -> userService.getAllOrdersByUser(user)
         );
     }

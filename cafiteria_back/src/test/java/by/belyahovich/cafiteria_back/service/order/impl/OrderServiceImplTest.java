@@ -1,5 +1,6 @@
 package by.belyahovich.cafiteria_back.service.order.impl;
 
+import by.belyahovich.cafiteria_back.config.ResourceNotFoundException;
 import by.belyahovich.cafiteria_back.domain.Order;
 import by.belyahovich.cafiteria_back.domain.User;
 import by.belyahovich.cafiteria_back.repository.order.OrderRepository;
@@ -51,10 +52,10 @@ class OrderServiceImplTest {
     }
 
     @Test
-    public void findOrderById_IfOrderNotExisting_shouldReturnRunTimeExeption(){
+    public void findOrderById_IfOrderNotExisting_shouldReturnResourceNotFoundException(){
         when(orderRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(RuntimeException.class,
+        assertThrows(ResourceNotFoundException.class,
                 () -> orderService.findOrderById(anyLong()));
     }
 
@@ -80,10 +81,10 @@ class OrderServiceImplTest {
     }
 
     @Test
-    public void createOrder_IfOrderExisting_shouldReturnRunTimeException(){
+    public void createOrder_IfOrderExisting_shouldReturnResourceNotFoundException(){
         when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
 
-        assertThrows(RuntimeException.class,
+        assertThrows(ResourceNotFoundException.class,
                 () -> orderService.createOrder(order));
     }
 
@@ -109,21 +110,3 @@ class OrderServiceImplTest {
         );
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -55,5 +55,4 @@ class RoleRepositoryJpaTest {
         //then
         actualRole.ifPresent(roleCheck -> assertThat(roleCheck).isEqualTo(expectedRole));
     }
-
 }

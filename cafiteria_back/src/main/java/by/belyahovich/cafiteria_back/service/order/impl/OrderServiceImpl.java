@@ -1,5 +1,6 @@
 package by.belyahovich.cafiteria_back.service.order.impl;
 
+import by.belyahovich.cafiteria_back.config.ResourceNotFoundException;
 import by.belyahovich.cafiteria_back.domain.Order;
 import by.belyahovich.cafiteria_back.repository.order.OrderRepository;
 import by.belyahovich.cafiteria_back.service.order.OrderService;
@@ -24,7 +25,7 @@ public class OrderServiceImpl implements OrderService {
     public Optional<Order> findOrderById(long id) {
         Optional<Order> orderFromBD = orderRepository.findById(id);
         if(orderFromBD.isEmpty()){
-            throw new RuntimeException("Oder not found with nuber " + id);
+            throw new ResourceNotFoundException("Oder with id " + id + " not found");
         }
         return orderFromBD;
     }
@@ -40,7 +41,7 @@ public class OrderServiceImpl implements OrderService {
     public Order createOrder(Order order) {
         Optional<Order> searchingOrder = orderRepository.findById(order.getId());
         if (searchingOrder.isPresent()){
-            throw new RuntimeException("This order existing " + order.getId());
+            throw new ResourceNotFoundException("Order with id " + order.getId() + " exist");
         }
         return orderRepository.save(order);
     }
