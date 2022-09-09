@@ -1,5 +1,6 @@
 package by.belyahovich.cafiteria_back.service.user.impl;
 
+import by.belyahovich.cafiteria_back.config.ResourceNotFoundException;
 import by.belyahovich.cafiteria_back.domain.Order;
 import by.belyahovich.cafiteria_back.domain.Role;
 import by.belyahovich.cafiteria_back.domain.User;
@@ -32,11 +33,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public Optional<User> findUserById(long userId) {
-        Optional<User> userFromDB = userRepository.findById(userId);
-        if (userFromDB.isEmpty()){
-            throw new UsernameNotFoundException("User not found" + userId);
-        }
-        return userFromDB;
+        return Optional.ofNullable(userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException("User with id " + userId + " not found")
+        ));
     }
 
     @Override
@@ -48,8 +47,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public User createUser(User user) {
         User userFromDB = userRepositoryJpa.findUserByPhone(user.getPhone());
 
-        if (userFromDB != null){
-            throw new RuntimeException("Record alredy exists");
+        if (userFromDB != null) {
+            throw new ResourceNotFoundException("Current user with id " + user.getId() + " exist");
         }
 
         user.setRoles(Collections.singleton(new Role(1L, "ROLE_USER")));
@@ -59,19 +58,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public boolean deleteUser(User user) {
-        if(userRepository.findById(user.getId()).isPresent()){
+        if (userRepository.findById(user.getId()).isPresent()) {
             userRepository.delete(user);
             return true;
         }
-        return false;
+        return false ;
     }
 
     @Override
     public List<Order> getAllOrdersByUser(User user) {
-        Optional<User> userFromDB = userRepository.findById(user.getId());
-        if (userFromDB.isEmpty()){
-            throw new UsernameNotFoundException("User not found");
-        }
+        userRepository.findById(user.getId()).orElseThrow(
+                () -> new ResourceNotFoundException("User with id " + user.getId() + "not found"));
         return userRepositoryJpa.getAllOrdersByUserId(user.getId());
     }
 
@@ -79,10 +76,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserDetails loadUserByUsername(String phone) throws UsernameNotFoundException {
         User user = userRepositoryJpa.findUserByPhone(Long.parseLong(phone));
 
-        if (user == null){
+        if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
         return user;
     }
-
 }

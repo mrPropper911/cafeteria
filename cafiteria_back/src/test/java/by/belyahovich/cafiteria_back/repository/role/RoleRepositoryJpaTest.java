@@ -44,7 +44,6 @@ class RoleRepositoryJpaTest {
     @Test
     public void findById_WithExistingRole_shouldPropperlyFindRole(){
         //give
-        long NUMBER_OF_ROLE = 1;
         Role role = new Role();
         role.setName("ROLE_OFICE");
         Role expectedRole = roleRepositoryJpa.save(role);
@@ -55,5 +54,4 @@ class RoleRepositoryJpaTest {
         //then
         actualRole.ifPresent(roleCheck -> assertThat(roleCheck).isEqualTo(expectedRole));
     }
-
 }
