@@ -20,4 +20,6 @@ public class AdminController {
     public List<User> userList() {
         return userService.allUsers();
     }
+
+
 }
