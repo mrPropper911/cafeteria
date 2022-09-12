@@ -5,6 +5,8 @@ import by.belyahovich.cafiteria_back.service.user.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 public class AdminController {
 
@@ -15,11 +17,7 @@ public class AdminController {
     }
 
     @GetMapping("/admin")
-    public String userList() {
-        StringBuilder outTest = new StringBuilder();
-        for (User user : userService.allUsers()) {
-            outTest.append(user);
-        }
-        return outTest.toString();
+    public List<User> userList() {
+        return userService.allUsers();
     }
 }

@@ -1,11 +1,12 @@
 package by.belyahovich.cafiteria_back.domain;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.Objects;
-import java.util.Set;
 
 @Setter
 @Getter
@@ -21,9 +22,9 @@ public class Role implements GrantedAuthority {
     @Column(name = "name")
     private String name;
 
-    @Transient
-    @ManyToMany(mappedBy = "roles")
-    private Set<User> users;
+    @ManyToOne(targetEntity = User.class, cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User users;
 
     public Role(long id) {
         this.id = id;

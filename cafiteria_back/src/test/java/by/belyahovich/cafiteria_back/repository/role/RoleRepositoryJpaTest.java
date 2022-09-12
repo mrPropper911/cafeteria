@@ -54,4 +54,17 @@ class RoleRepositoryJpaTest {
         //then
         actualRole.ifPresent(roleCheck -> assertThat(roleCheck).isEqualTo(expectedRole));
     }
+
+    @Sql(scripts = {"/sql/clearDatabases.sql", "/sql/addRoleForUser.sql"})
+    @Test
+    public void findRoleByUserId_WithExistingUserID_shouldReturnRoleOfUser(){
+        long USER_ID_WITH_ROLE_ADMIN = 2;
+        Role expectedRole = new Role();
+        expectedRole.setName("ROLE_ADMIN");
+        Role actualRoleByUserId = roleRepositoryJpa.findRoleByUserId(USER_ID_WITH_ROLE_ADMIN);
+
+        assertThat(actualRoleByUserId).isNotNull();
+        assertThat(actualRoleByUserId.getName()).isEqualTo(expectedRole.getName());
+    }
+
 }

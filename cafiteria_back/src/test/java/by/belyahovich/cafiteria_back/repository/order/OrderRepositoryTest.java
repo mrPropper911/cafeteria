@@ -54,7 +54,7 @@ class OrderRepositoryTest {
         order.setTime(date);
         order.setLocation("Vitebsk");
         order.setComment("Best price in all city");
-        order.setUser(userRepository.findById(USER_NUMBER).stream().iterator().next());
+        order.setUser(userRepository.findById(USER_NUMBER).get());
 
         //when
         orderRepository.save(order);

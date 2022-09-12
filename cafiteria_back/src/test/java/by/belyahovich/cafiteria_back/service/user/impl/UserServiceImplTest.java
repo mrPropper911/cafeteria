@@ -3,6 +3,7 @@ package by.belyahovich.cafiteria_back.service.user.impl;
 import by.belyahovich.cafiteria_back.config.ResourceNotFoundException;
 import by.belyahovich.cafiteria_back.domain.Order;
 import by.belyahovich.cafiteria_back.domain.User;
+import by.belyahovich.cafiteria_back.repository.role.RoleRepositoryJpa;
 import by.belyahovich.cafiteria_back.repository.user.UserRepository;
 import by.belyahovich.cafiteria_back.repository.user.UserRepositoryJpa;
 import by.belyahovich.cafiteria_back.service.user.UserService;
@@ -27,6 +28,7 @@ class UserServiceImplTest {
     private UserService userService;
     private UserRepository userRepository;
     private UserRepositoryJpa userRepositoryJpa;
+    private RoleRepositoryJpa roleRepositoryJpa;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private User user;
 
@@ -34,8 +36,9 @@ class UserServiceImplTest {
     public void init() {
         userRepository = Mockito.mock(UserRepository.class);
         userRepositoryJpa = Mockito.mock(UserRepositoryJpa.class);
+        roleRepositoryJpa = Mockito.mock(RoleRepositoryJpa.class);
         bCryptPasswordEncoder = Mockito.mock(BCryptPasswordEncoder.class);
-        userService = new UserServiceImpl(userRepository, userRepositoryJpa);
+        userService = new UserServiceImpl(userRepository, userRepositoryJpa, roleRepositoryJpa);
 
         user = new User();
         user.setId(EXIST_USER_ID);
