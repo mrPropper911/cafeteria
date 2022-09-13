@@ -1,7 +1,9 @@
 import React, {useState} from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import { Grid, Paper, Box, rgbToHex } from "@mui/material";
+import { Grid, Paper, Box, Alert} from "@mui/material";
+
+import {Link} from 'react-router-dom';
 
 import {SERVER_URL} from './constants'
 
@@ -11,6 +13,11 @@ function Login(){
     const changeAuthMode = () => {
         setAuthMode(authMode === "signin" ? "signup" : "signin")
     }
+
+    const [alert, setAlert] = useState(false);
+    const [alertContent, setAlertContent] = useState('');
+    const [severity, setSeveryty] = useState('success');
+    const [showElement, setShowElement] = useState(false);
 
     const [user, setUser] = useState ({
         username: '',
@@ -56,6 +63,23 @@ function Login(){
     }
 
     const createNewUser = () => {
+        fetch(SERVER_URL + 'registration', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify(newUser)
+        }).then(response => {
+            if(response.ok){
+                setAlertContent('Saved complite');
+                setShowElement(true);
+                setAlert(true);
+            } else {
+                setAlertContent('Not saved');
+                setAlert(true);
+                setShowElement(true);
+                setSeveryty('error'); 
+        }}).catch(error => {
+            alert(error);
+        })
 
     }
 
@@ -99,11 +123,15 @@ function Login(){
                                 <TextField style={{marginBottom: "10px"}} size="small" name="location" label="Location" onChange={handleNewChange} />
                                 <TextField style={{marginBottom: "10px"}} size="small" name="phone" label="Phone" onChange={handleNewChange} />
                                 <TextField style={{marginBottom: "10px"}} size="small" name="email" label="Email" onChange={handleNewChange} />
-                                <TextField style={{marginBottom: "30px"}} size="small" name="password" type={"password"} label="Password" onChange={handleChange}/>
+                                <TextField style={{marginBottom: "30px"}} size="small" name="password" type={"password"} label="Password" onChange={handleNewChange}/>
                                 <Grid container direction="row" justifyContent="space-between" alignItems="center" style={{marginBottom: "30px"}} >
-                                    <Button variant="outlined" color="error" onClick={changeAuthMode}>Back</Button>
-                                    <Button variant="outlined" color="primary" onClick={createNewUser}>Submit</Button>
+                                    <Button variant="outlined" color="error" onClick={changeAuthMode} LinkComponent={Link} to='/login'>Back</Button>
+                                    <Button type="submit" variant="outlined" color="primary" onClick={createNewUser}>Submit</Button>
                                 </Grid>
+                                
+                                <div>
+                                    {alert & showElement ? <Alert severity={severity}>{alertContent}</Alert> : <></>}
+                                 </div>
                             </Grid>
                     </Paper>
                 </Box>
