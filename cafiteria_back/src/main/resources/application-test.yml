@@ -22,4 +22,5 @@ spring:
 
 logging:
   level:
-    sql: info
+    root: info
+    sql: trace

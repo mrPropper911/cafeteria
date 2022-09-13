@@ -17,5 +17,5 @@ public interface UserRepositoryJpa extends JpaRepository<User, Long> {
     List<Order> getAllOrdersByUserId(long id);
 
     //Find user by phone because phone unique
-    User findUserByPhone (long userPhone);
+    User findUserByUsername (String username);
 }

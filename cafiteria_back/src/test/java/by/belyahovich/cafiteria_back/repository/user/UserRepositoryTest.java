@@ -45,7 +45,7 @@ class UserRepositoryTest {
     public void save_WithNewUser_shouldPropperlySaveNewUser() {
         //given
         User user = new User();
-        user.setName("Vilat");
+        user.setUsername("Vilat");
         user.setSurname("Volochai");
         user.setLocation("Kiev");
         user.setPhone(375334423863L);
@@ -94,8 +94,8 @@ class UserRepositoryTest {
         assertThat(userForUpdate).isPresent();
 
         //when
-        userForUpdate.get().setName("TestName");
-        userForUpdate.get().setName("TestSurname");
+        userForUpdate.get().setUsername("TestName");
+        userForUpdate.get().setUsername("TestSurname");
         userRepository.save(userForUpdate.get());
         Optional<User> userAfterUpdateFromBD = userRepository.findById(SOME_RANDOM_USER_NUMBER);
 
@@ -133,7 +133,7 @@ class UserRepositoryTest {
         assertThat(expectedUser).isPresent();
 
         //when
-        User actualUser = userRepositoryJpa.findUserByPhone(expectedUser.get().getPhone());
+        User actualUser = userRepositoryJpa.findUserByUsername(expectedUser.get().getUsername());
 
         //then
         assertThat(actualUser).isEqualTo(expectedUser.get());

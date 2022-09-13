@@ -1,6 +1,7 @@
 package by.belyahovich.cafiteria_back.repository.order;
 
 import by.belyahovich.cafiteria_back.domain.Order;
+import by.belyahovich.cafiteria_back.domain.User;
 import by.belyahovich.cafiteria_back.repository.user.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -54,7 +55,10 @@ class OrderRepositoryTest {
         order.setTime(date);
         order.setLocation("Vitebsk");
         order.setComment("Best price in all city");
-        order.setUser(userRepository.findById(USER_NUMBER).stream().iterator().next());
+        Optional<User> actualUser = userRepository.findById(USER_NUMBER);
+        assertThat(actualUser).isPresent();
+
+        order.setUser(actualUser.get());
 
         //when
         orderRepository.save(order);

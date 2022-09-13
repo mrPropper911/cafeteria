@@ -3,6 +3,7 @@ package by.belyahovich.cafiteria_back.service.user.impl;
 import by.belyahovich.cafiteria_back.config.ResourceNotFoundException;
 import by.belyahovich.cafiteria_back.domain.Order;
 import by.belyahovich.cafiteria_back.domain.User;
+import by.belyahovich.cafiteria_back.repository.role.RoleRepositoryJpa;
 import by.belyahovich.cafiteria_back.repository.user.UserRepository;
 import by.belyahovich.cafiteria_back.repository.user.UserRepositoryJpa;
 import by.belyahovich.cafiteria_back.service.user.UserService;
@@ -27,6 +28,7 @@ class UserServiceImplTest {
     private UserService userService;
     private UserRepository userRepository;
     private UserRepositoryJpa userRepositoryJpa;
+    private RoleRepositoryJpa roleRepositoryJpa;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private User user;
 
@@ -34,12 +36,13 @@ class UserServiceImplTest {
     public void init() {
         userRepository = Mockito.mock(UserRepository.class);
         userRepositoryJpa = Mockito.mock(UserRepositoryJpa.class);
+        roleRepositoryJpa = Mockito.mock(RoleRepositoryJpa.class);
         bCryptPasswordEncoder = Mockito.mock(BCryptPasswordEncoder.class);
-        userService = new UserServiceImpl(userRepository, userRepositoryJpa);
+        userService = new UserServiceImpl(userRepository, userRepositoryJpa, roleRepositoryJpa);
 
         user = new User();
         user.setId(EXIST_USER_ID);
-        user.setName("Vilat");
+        user.setUsername("Vilat");
         user.setSurname("Volochai");
         user.setLocation("Kiev");
         user.setPhone(375334423863L);
@@ -73,7 +76,7 @@ class UserServiceImplTest {
         //given
         User userSecond = new User();
         userSecond.setId(EXIST_USER_SECOND_ID);
-        userSecond.setName("Inna");
+        userSecond.setUsername("Inna");
         userSecond.setSurname("Loshick");
         userSecond.setLocation("litba");
         userSecond.setPhone(373314423863L);
@@ -93,7 +96,7 @@ class UserServiceImplTest {
 
     @Test
     public void createUser_IfUserExist_shouldNotCreatedUser() {
-        when(userRepositoryJpa.findUserByPhone(anyLong())).thenReturn(user);
+        when(userRepositoryJpa.findUserByUsername(anyString())).thenReturn(user);
 
         assertThrows(ResourceNotFoundException.class,
                 () -> userService.createUser(user));
@@ -101,7 +104,7 @@ class UserServiceImplTest {
 
     @Test
     public void createUser_IfUserNotExist_shouldPropperlyCreateNewUser() {
-        when(userRepositoryJpa.findUserByPhone(anyLong())).thenReturn(null);
+        when(userRepositoryJpa.findUserByUsername(anyString())).thenReturn(null);
         when(bCryptPasswordEncoder.encode(anyString())).thenReturn("12r9743143pfpbu1i43f");
         when(userRepository.save(any(User.class))).thenReturn(user);
 
