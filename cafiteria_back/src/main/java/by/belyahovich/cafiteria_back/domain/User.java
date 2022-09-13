@@ -137,6 +137,10 @@ public class User implements UserDetails {
         return true;
     }
 
+    public void setSetRoles(Set<Role> setRoles) {
+        this.setRoles = setRoles;
+    }
+
     public Set<Role> getRoles(){
         return setRoles;
     }

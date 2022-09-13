@@ -95,6 +95,7 @@ public class WebSecurityConfig {
                 // POST request to /login endpoint is not secured
                 //.antMatchers("/admin").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
+                .antMatchers("/registration").permitAll()
                 // All other requests are secured
                 .anyRequest().authenticated()
                 .and()

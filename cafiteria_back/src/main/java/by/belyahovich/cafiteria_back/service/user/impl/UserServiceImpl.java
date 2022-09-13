@@ -2,6 +2,7 @@ package by.belyahovich.cafiteria_back.service.user.impl;
 
 import by.belyahovich.cafiteria_back.config.ResourceNotFoundException;
 import by.belyahovich.cafiteria_back.domain.Order;
+import by.belyahovich.cafiteria_back.domain.Role;
 import by.belyahovich.cafiteria_back.domain.User;
 import by.belyahovich.cafiteria_back.repository.role.RoleRepositoryJpa;
 import by.belyahovich.cafiteria_back.repository.user.UserRepository;
@@ -54,7 +55,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             throw new ResourceNotFoundException("Current user with id " + user.getId() + " exist");
         }
 
-//        user.setRoles(Collections.singleton(new Role(1L, "ROLE_USER")));
+        //user.setSetRoles(Collections.singleton(new Role(1L, "ROLE_USER")));
+        roleRepositoryJpa.save(new Role("ROLE_USER", user));
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }

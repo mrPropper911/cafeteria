@@ -35,6 +35,11 @@ public class Role implements GrantedAuthority {
         this.name = name;
     }
 
+    public Role(String name, User user){
+        this.name = name;
+        this.users = user;
+    }
+
     @Override
     public String getAuthority() {
         return getName();
