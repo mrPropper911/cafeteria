@@ -8,7 +8,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 import static java.util.Objects.isNull;
 
@@ -24,8 +27,8 @@ public class User implements UserDetails {
     private long id;
 
     @Size
-    @Column(name = "name")
-    private String name;
+    @Column(name = "username")
+    private String username;
 
     @Column(name = "surname")
     private String surname;
@@ -70,7 +73,7 @@ public class User implements UserDetails {
 
         if (id != user.id) return false;
         if (phone != user.phone) return false;
-        if (!Objects.equals(name, user.name)) return false;
+        if (!Objects.equals(username, user.username)) return false;
         if (!Objects.equals(surname, user.surname)) return false;
         if (!Objects.equals(location, user.location)) return false;
         if (!email.equals(user.email)) return false;
@@ -80,7 +83,7 @@ public class User implements UserDetails {
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (username != null ? username.hashCode() : 0);
         result = 31 * result + (surname != null ? surname.hashCode() : 0);
         result = 31 * result + (location != null ? location.hashCode() : 0);
         result = (int) (31 * result + phone);
@@ -93,7 +96,7 @@ public class User implements UserDetails {
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", username='" + username + '\'' +
                 ", surname='" + surname + '\'' +
                 ", location='" + location + '\'' +
                 ", phone=" + phone +
@@ -104,12 +107,14 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return setRoles;
+//        List<GrantedAuthority> list = new ArrayList<GrantedAuthority>();
+//        list.add(new SimpleGrantedAuthority("ROLE_" + setRoles.stream().iterator().hasNext()));
+        return getRoles();
     }
 
     @Override
     public String getUsername() {
-        return name;
+        return username;
     }
 
     @Override
@@ -130,5 +135,9 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public Set<Role> getRoles(){
+        return setRoles;
     }
 }

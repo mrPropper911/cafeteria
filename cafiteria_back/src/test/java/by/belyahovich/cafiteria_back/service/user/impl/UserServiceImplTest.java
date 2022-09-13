@@ -42,7 +42,7 @@ class UserServiceImplTest {
 
         user = new User();
         user.setId(EXIST_USER_ID);
-        user.setName("Vilat");
+        user.setUsername("Vilat");
         user.setSurname("Volochai");
         user.setLocation("Kiev");
         user.setPhone(375334423863L);
@@ -76,7 +76,7 @@ class UserServiceImplTest {
         //given
         User userSecond = new User();
         userSecond.setId(EXIST_USER_SECOND_ID);
-        userSecond.setName("Inna");
+        userSecond.setUsername("Inna");
         userSecond.setSurname("Loshick");
         userSecond.setLocation("litba");
         userSecond.setPhone(373314423863L);
@@ -96,7 +96,7 @@ class UserServiceImplTest {
 
     @Test
     public void createUser_IfUserExist_shouldNotCreatedUser() {
-        when(userRepositoryJpa.findUserByPhone(anyLong())).thenReturn(user);
+        when(userRepositoryJpa.findUserByUsername(anyString())).thenReturn(user);
 
         assertThrows(ResourceNotFoundException.class,
                 () -> userService.createUser(user));
@@ -104,7 +104,7 @@ class UserServiceImplTest {
 
     @Test
     public void createUser_IfUserNotExist_shouldPropperlyCreateNewUser() {
-        when(userRepositoryJpa.findUserByPhone(anyLong())).thenReturn(null);
+        when(userRepositoryJpa.findUserByUsername(anyString())).thenReturn(null);
         when(bCryptPasswordEncoder.encode(anyString())).thenReturn("12r9743143pfpbu1i43f");
         when(userRepository.save(any(User.class))).thenReturn(user);
 

@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,7 +48,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User createUser(User user) {
-        User userFromDB = userRepositoryJpa.findUserByPhone(user.getPhone());
+        User userFromDB = userRepositoryJpa.findUserByUsername(user.getUsername());
 
         if (userFromDB != null) {
             throw new ResourceNotFoundException("Current user with id " + user.getId() + " exist");
@@ -75,17 +76,24 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String phone) throws UsernameNotFoundException {
-        User user = userRepositoryJpa.findUserByPhone(Long.parseLong(phone));
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepositoryJpa.findUserByUsername(username);
         UserBuilder userBuilder;
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
-        } else {
-            userBuilder = org.springframework.security.core.userdetails.
-                    User.withUsername(phone);
-            userBuilder.password(user.getPassword());
-            userBuilder.roles(roleRepositoryJpa.findRoleByUserId(user.getId()).getName());
         }
-        return user;
+//        else {
+//            userBuilder = org.springframework.security.core.userdetails.
+//                    User.withUsername(username);
+//            userBuilder.password(user.getPassword());
+//            userBuilder.roles(roleRepositoryJpa.findRoleByUserId(user.getId()).getName());
+//        }
+//        return userBuilder.build();
+        user.setSetRoles(Collections.singleton(roleRepositoryJpa.findRoleByUserId(user.getId())));
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(), user.getPassword(), user.isEnabled(),
+                true, true, true,
+                user.getAuthorities());
     }
+
 }

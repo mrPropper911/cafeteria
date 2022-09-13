@@ -28,7 +28,7 @@ public class LoginController {
     public ResponseEntity<?> getToken(@RequestBody AccountCredentials accountCredentials){
         UsernamePasswordAuthenticationToken creds =
                 new UsernamePasswordAuthenticationToken(
-                        accountCredentials.getPhone(),
+                        accountCredentials.getUsername(),
                         accountCredentials.getPassword()
                 );
         Authentication authentication = authenticationManager.authenticate(creds);

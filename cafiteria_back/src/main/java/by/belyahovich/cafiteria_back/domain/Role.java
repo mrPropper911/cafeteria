@@ -22,7 +22,7 @@ public class Role implements GrantedAuthority {
     @Column(name = "name")
     private String name;
 
-    @ManyToOne(targetEntity = User.class, cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = User.class, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User users;
 
@@ -64,7 +64,7 @@ public class Role implements GrantedAuthority {
     public String toString() {
         return "Role{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", username='" + name + '\'' +
                 ", users=" + users +
                 '}';
     }

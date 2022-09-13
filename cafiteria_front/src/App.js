@@ -1,12 +1,18 @@
 import './App.css';
-import './components/login'
-import Login from './components/login';
+
+import "bootstrap/dist/css/bootstrap.min.css"
+import { BrowserRouter, Routes, Route, Router } from "react-router-dom"
+
+import Login from "./components/Login"
+
 
 function App() {
   return (
-    <div className="App">
-      <Login />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path='/login' element={<Login/>}/>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
